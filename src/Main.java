@@ -4,9 +4,8 @@ public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 
-        System.out.println("===== SISTEMA DE RESERVAS DE CITAS MÉDICAS =====\n");
+        System.out.println("===== SISTEMA DE RESERVAS DE CITAS MÉDICAS (Patrones) =====\n");
 
-        // Ingreso de datos de la cita
         System.out.print("Ingrese la fecha de la cita (dd/mm/aaaa): ");
         String fecha = sc.nextLine();
 
@@ -23,32 +22,34 @@ public class Main {
         System.out.println("2. SMS");
         System.out.print("Opción: ");
         int opcion = sc.nextInt();
-        sc.nextLine(); 
+        sc.nextLine(); // limpiar buffer
 
-        Notifica notificador;
-
-        if (opcion == 1) {
-            System.out.print("Ingrese el correo electrónico del paciente: ");
-            String email = sc.nextLine();
-            notificador = new EmailNotificador(email);
-        } else if (opcion == 2) {
-            System.out.print("Ingrese el número de teléfono del paciente: ");
+        Notifica notificadorBase;
+        if (opcion == 2) {
+            System.out.print("Ingrese el número de teléfono: ");
             String telefono = sc.nextLine();
-            notificador = new SmsNotificador(telefono);
+            notificadorBase = NotificadorFactory.create(NotificadorFactory.Tipo.SMS, telefono);
         } else {
-            System.out.println("Opción inválida. Se usará correo electrónico por defecto.");
-            notificador = new EmailNotificador("correo@ejemplo.com");
+            System.out.print("Ingrese el correo electrónico: ");
+            String email = sc.nextLine();
+            notificadorBase = NotificadorFactory.create(NotificadorFactory.Tipo.EMAIL, email);
         }
 
-        Paciente paciente = new Paciente(nombrePaciente, notificador);
+        // Aplicamos el Decorator para añadir logging al notificador
+        Notifica notificadorConLog = new LoggingNotificador(notificadorBase);
 
-        AppointmentManager gestor = new AppointmentManager();
+        // Creamos el paciente que recibe las notificaciones
+        Paciente paciente = new Paciente(nombrePaciente, notificadorConLog);
 
-        gestor.addAppointment(cita);
-        gestor.confirmAppointment(cita, paciente);
+        // Manager y registro
+        AppointmentManager manager = new AppointmentManager();
+        manager.addAppointment(cita);
 
-        System.out.println("\n===== CITA CONFIRMADA EXITOSAMENTE =====");
+        // Usamos Command para confirmar + notificar
+        ConfirmAppointmentCommand cmd = new ConfirmAppointmentCommand(cita, paciente);
+        manager.executeCommand(cmd);
 
+        System.out.println("\n===== FIN =====");
         sc.close();
     }
 }

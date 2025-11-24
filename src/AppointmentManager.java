@@ -1,10 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
-// =============================================================
-// D: Principio de Inversión de Dependencias (DIP)
-// =============================================================
-
+// Manager mantiene la lista de citas y puede ejecutar comandos (Command Pattern)
 public class AppointmentManager {
     private List<Appointment> appointments = new ArrayList<>();
 
@@ -13,8 +10,8 @@ public class AppointmentManager {
         System.out.println("🗓️ Cita registrada: " + appointment.getDoctorName() + " el " + appointment.getDate());
     }
 
-    public void confirmAppointment(Appointment appointment, Notifica notifier) {
-        appointment.confirm();
-        notifier.notify("Su cita con el Dr. " + appointment.getDoctorName() + " ha sido confirmada para el " + appointment.getDate());
+    // Método auxiliar para ejecutar un comando
+    public void executeCommand(Command cmd) {
+        cmd.execute();
     }
 }
