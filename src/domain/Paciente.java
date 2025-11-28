@@ -1,5 +1,7 @@
+package domain;
 // Paciente actúa como receptor lógico de notificaciones y cumple SRP:
 // mantiene datos del paciente y delega la notificación a un Notifica.
+
 public class Paciente implements Notifica {
     private String name;
     private Notifica notifier; // cumple DIP: depende de abstracción

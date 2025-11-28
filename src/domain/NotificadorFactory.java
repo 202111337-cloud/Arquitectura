@@ -1,4 +1,6 @@
+package domain;
 // Factory simple para crear instancias de Notifica sin acoplar al consumidor
+
 public class NotificadorFactory {
 
     public enum Tipo { EMAIL, SMS }

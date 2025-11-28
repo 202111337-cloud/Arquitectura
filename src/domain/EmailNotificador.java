@@ -1,6 +1,8 @@
+package domain;
 // =============================================================
 // L: Principio de Sustitución de Liskov (LSP)
 // =============================================================
+
 public class EmailNotificador implements Notifica {
     private String email;
 

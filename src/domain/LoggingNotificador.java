@@ -1,4 +1,6 @@
+package domain;
 // Decorator que añade logging al acto de notificar sin modificar las clases originales
+
 public class LoggingNotificador implements Notifica {
     private final Notifica wrapped;
 
